@@ -1,13 +1,17 @@
 {
-    "required": true,
-    "minVersion": "0.8",
-    "package": "dotBlueShoes.atlas_lib.mixin",
-    "compatibilityLevel": "JAVA_8",
-    "mixins": [
-    ],
-    "client": [
-    ],
-    "injectors": {
-        "defaultRequire": 1
+  "required": true,
+  "minVersion": "0.8",
+  "package": "dotBlueShoes.atlas_lib.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+	"mixins.ChunkRendererMixin",
+	"mixins.ItemEntityRendererMixin",
+	"mixins.ItemRendererMixin",
+	"mixins.RenderBlocksMixin"
+  ],
+  "client": [
+  ],
+  "injectors": {
+	"defaultRequire": 1
   }
 }
