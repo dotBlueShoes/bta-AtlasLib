@@ -6,7 +6,8 @@ package dotBlueShoes.atlas_lib.mixin.mixins;
 ///
 
 import dotBlueShoes.atlas_lib.helper.SpriteAtlasHelper;
-import dotBlueShoes.atlas_lib.items.SpriteAtlasItem;
+import dotBlueShoes.atlas_lib.utility.ISpriteAtlasItem;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.render.ItemRenderer;
 import net.minecraft.client.render.RenderBlocks;
@@ -94,17 +95,17 @@ public abstract class ItemRendererMixin {
 				goon = 0.0625f * (16.0f / (float)tileWidth);
 
 			} else {
-				if (itemstack.getItem() instanceof SpriteAtlasItem) {
-					SpriteAtlasItem spriteAtlasItem = (SpriteAtlasItem) itemstack.getItem();
-					GL11.glBindTexture(3553, this.mc.renderEngine.getTexture(spriteAtlasItem.spriteAtlas.getName()));
-					tileWidth = spriteAtlasItem.spriteAtlas.resolution;
+				if (itemstack.getItem() instanceof ISpriteAtlasItem) {
+					ISpriteAtlasItem spriteAtlasItem = (ISpriteAtlasItem) itemstack.getItem();
+					GL11.glBindTexture(3553, this.mc.renderEngine.getTexture(spriteAtlasItem.getSpriteAtlas().getName()));
+					tileWidth = spriteAtlasItem.getSpriteAtlas().resolution;
 
-					xo  = ((float) (spriteAtlasItem.getSpriteIndex() % spriteAtlasItem.spriteAtlas.elements.x) / spriteAtlasItem.spriteAtlas.elements.x);
-					xe  = xo + (1f / spriteAtlasItem.spriteAtlas.elements.x);
-					yo = ((float) (spriteAtlasItem.getSpriteIndex() / spriteAtlasItem.spriteAtlas.elements.x) / spriteAtlasItem.spriteAtlas.elements.y);
-					ye = yo + (1f / spriteAtlasItem.spriteAtlas.elements.y);
+					xo  = ((float) (spriteAtlasItem.getSpriteIndex() % spriteAtlasItem.getSpriteAtlas().elements.x) / spriteAtlasItem.getSpriteAtlas().elements.x);
+					xe  = xo + (1f / spriteAtlasItem.getSpriteAtlas().elements.x);
+					yo = ((float) (spriteAtlasItem.getSpriteIndex() / spriteAtlasItem.getSpriteAtlas().elements.x) / spriteAtlasItem.getSpriteAtlas().elements.y);
+					ye = yo + (1f / spriteAtlasItem.getSpriteAtlas().elements.y);
 
-					foon = 0.5f / (float)tileWidth / (float)spriteAtlasItem.spriteAtlas.elements.x;
+					foon = 0.5f / (float)tileWidth / (float)spriteAtlasItem.getSpriteAtlas().elements.x;
 					goon = 0.0625f * (16.0f / (float)tileWidth);
 
 				} else {

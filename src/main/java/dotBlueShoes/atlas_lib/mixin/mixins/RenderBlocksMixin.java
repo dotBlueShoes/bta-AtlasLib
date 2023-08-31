@@ -7,6 +7,7 @@ package dotBlueShoes.atlas_lib.mixin.mixins;
 ///
 
 import dotBlueShoes.atlas_lib.helper.SpriteAtlasHelper;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.render.RenderBlocks;
 import net.minecraft.client.render.Tessellator;

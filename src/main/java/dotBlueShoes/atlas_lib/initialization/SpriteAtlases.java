@@ -2,7 +2,10 @@ package dotBlueShoes.atlas_lib.initialization;
 
 import dotBlueShoes.atlas_lib.utility.SpriteAtlas;
 
-public class SpriteAtlases {
+import java.util.ArrayList;
+import java.util.List;
 
-	public static SpriteAtlas[] atlases = {};
+public class SpriteAtlases {
+	public static List<SpriteAtlas> atlases = new ArrayList<>();
+
 }

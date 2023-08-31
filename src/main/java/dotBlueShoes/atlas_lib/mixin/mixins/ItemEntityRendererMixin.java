@@ -6,9 +6,9 @@ package dotBlueShoes.atlas_lib.mixin.mixins;
 ///  - Renders items in hot-bar and drawItemIntoGui is needed for GuiRenderItem to work.
 ///
 
-import dotBlueShoes.atlas_lib.blocks.SpriteAtlasBlock;
 import dotBlueShoes.atlas_lib.helper.SpriteAtlasHelper;
-import dotBlueShoes.atlas_lib.items.SpriteAtlasItem;
+import dotBlueShoes.atlas_lib.utility.ISpriteAtlasItem;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.block.model.BlockModel;
@@ -135,11 +135,11 @@ public abstract class ItemEntityRendererMixin extends EntityRenderer<EntityItem>
 				//Global.LOGGER.info("call");
 				tileWidth = TextureFX.tileWidthTerrain;
 			} else {
-				if (itemstack.getItem() instanceof SpriteAtlasItem) {
-					SpriteAtlasItem spriteAtlasItem = (SpriteAtlasItem) itemstack.getItem();
+				if (itemstack.getItem() instanceof ISpriteAtlasItem) {
+					ISpriteAtlasItem spriteAtlasItem = (ISpriteAtlasItem) itemstack.getItem();
 
 					RenderEngine renderEngine = this.renderDispatcher.renderEngine;
-					int texture = SpriteAtlasHelper.getCustomTexture(renderEngine, spriteAtlasItem.spriteAtlas.getName());
+					int texture = SpriteAtlasHelper.getCustomTexture(renderEngine, spriteAtlasItem.getSpriteAtlas().getName());
 					renderEngine.bindTexture(texture);
 
 					int spriteIndex = spriteAtlasItem.getSpriteIndex();
@@ -147,10 +147,10 @@ public abstract class ItemEntityRendererMixin extends EntityRenderer<EntityItem>
 					//f8  = (float)(iconIndex / atlasSpriteItem.textureAtlas.elements.x * tileWidth + tileWidth) / (float)(atlasSpriteItem.textureAtlas.elements.x * tileWidth);
 					//f10 = (float)(iconIndex % atlasSpriteItem.textureAtlas.elements.x * tileWidth) / (float)(atlasSpriteItem.textureAtlas.elements.y * tileWidth);
 					//f11 = (float)(iconIndex % atlasSpriteItem.textureAtlas.elements.x * tileWidth + tileWidth) / (float)(atlasSpriteItem.textureAtlas.elements.y * tileWidth);
-					f6  = ((float) (spriteIndex % spriteAtlasItem.spriteAtlas.elements.x) / spriteAtlasItem.spriteAtlas.elements.x);
-					f8  = f6 + (1f / spriteAtlasItem.spriteAtlas.elements.x);
-					f10 = ((float) (spriteIndex / spriteAtlasItem.spriteAtlas.elements.x) / spriteAtlasItem.spriteAtlas.elements.y);
-					f11 = f10 + (1f / spriteAtlasItem.spriteAtlas.elements.y);
+					f6  = ((float) (spriteIndex % spriteAtlasItem.getSpriteAtlas().elements.x) / spriteAtlasItem.getSpriteAtlas().elements.x);
+					f8  = f6 + (1f / spriteAtlasItem.getSpriteAtlas().elements.x);
+					f10 = ((float) (spriteIndex / spriteAtlasItem.getSpriteAtlas().elements.x) / spriteAtlasItem.getSpriteAtlas().elements.y);
+					f11 = f10 + (1f / spriteAtlasItem.getSpriteAtlas().elements.y);
 
 				} else {
 
@@ -304,12 +304,12 @@ public abstract class ItemEntityRendererMixin extends EntityRenderer<EntityItem>
 
 			} else {
 
-				if (Item.itemsList[itemId] instanceof SpriteAtlasItem) {
-					SpriteAtlasItem spriteAtlasItem = (SpriteAtlasItem) Item.itemsList[itemId];
-					renderengine.bindTexture(renderengine.getTexture(spriteAtlasItem.spriteAtlas.getName()));
+				if (Item.itemsList[itemId] instanceof ISpriteAtlasItem) {
+					ISpriteAtlasItem spriteAtlasItem = (ISpriteAtlasItem) Item.itemsList[itemId];
+					renderengine.bindTexture(renderengine.getTexture(spriteAtlasItem.getSpriteAtlas().getName()));
 
 					{
-						int color = spriteAtlasItem.getColorFromDamage(j);
+						int color = ((Item)spriteAtlasItem).getColorFromDamage(j);
 						float red = (float) (color >> 16 & 0xFF) / 255.0f;
 						float green = (float) (color >> 8 & 0xFF) / 255.0f;
 						float blue = (float) (color & 0xFF) / 255.0f;
@@ -320,10 +320,10 @@ public abstract class ItemEntityRendererMixin extends EntityRenderer<EntityItem>
 							GL11.glColor4f(brightness, brightness, brightness, alpha);
 						}
 
-						float xo  = ((float) (spriteIndex % spriteAtlasItem.spriteAtlas.elements.x) / spriteAtlasItem.spriteAtlas.elements.x);
-						float xe  = xo + (1f / spriteAtlasItem.spriteAtlas.elements.x);
-						float yo = ((float) (spriteIndex / spriteAtlasItem.spriteAtlas.elements.x) / spriteAtlasItem.spriteAtlas.elements.y);
-						float ye = yo + (1f / spriteAtlasItem.spriteAtlas.elements.y);
+						float xo  = ((float) (spriteIndex % spriteAtlasItem.getSpriteAtlas().elements.x) / spriteAtlasItem.getSpriteAtlas().elements.x);
+						float xe  = xo + (1f / spriteAtlasItem.getSpriteAtlas().elements.x);
+						float yo = ((float) (spriteIndex / spriteAtlasItem.getSpriteAtlas().elements.x) / spriteAtlasItem.getSpriteAtlas().elements.y);
+						float ye = yo + (1f / spriteAtlasItem.getSpriteAtlas().elements.y);
 
 						Tessellator tessellator = Tessellator.instance;
 						tessellator.startDrawingQuads();

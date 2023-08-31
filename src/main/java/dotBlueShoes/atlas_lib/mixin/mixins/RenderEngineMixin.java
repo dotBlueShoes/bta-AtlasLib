@@ -8,6 +8,7 @@ package dotBlueShoes.atlas_lib.mixin.mixins;
 import dotBlueShoes.atlas_lib.helper.SpriteAtlasHelper;
 import dotBlueShoes.atlas_lib.initialization.SpriteAtlases;
 import dotBlueShoes.atlas_lib.utility.SpriteAtlas;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.render.RenderEngine;
 import net.minecraft.client.render.dynamictexture.DynamicTexture;

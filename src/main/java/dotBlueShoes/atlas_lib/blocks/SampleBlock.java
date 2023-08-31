@@ -1,16 +1,18 @@
 package dotBlueShoes.atlas_lib.blocks;
 
+import dotBlueShoes.atlas_lib.utility.ISpriteAtlas;
+import dotBlueShoes.atlas_lib.utility.ISpriteAtlasBlock;
 import dotBlueShoes.atlas_lib.utility.SpriteAtlas;
+
 import net.minecraft.core.block.Block;
 import net.minecraft.core.block.material.Material;
-import net.minecraft.core.item.Item;
 import net.minecraft.core.util.helper.Side;
 
-public class SpriteAtlasBlock extends Block {
+public class SampleBlock extends Block implements ISpriteAtlasBlock {
 
-	public SpriteAtlas spriteAtlas;
+	private SpriteAtlas spriteAtlas;
 
-	public SpriteAtlasBlock(String key, int id, Material material, SpriteAtlas spriteAtlas) {
+	public SampleBlock(String key, int id, Material material, SpriteAtlas spriteAtlas) {
 		super(key, id, material);
 		this.spriteAtlas = spriteAtlas;
 	}
@@ -29,12 +31,25 @@ public class SpriteAtlasBlock extends Block {
 		return this;
 	}
 
-	public Block setBlockSideCoord(int side, int x, int y) {
+	@Override
+	public ISpriteAtlas setSpriteCoord(int side, int x, int y) {
 		atlasIndices[side] = this.spriteCoordToIndex(x, y);
 		return this;
 	}
 
+	@Override
 	public int getSpriteIndex(int side) {
 		return atlasIndices[side];
 	}
+
+	@Override
+	public SpriteAtlas getSpriteAtlas() {
+		return spriteAtlas;
+	}
+
+	@Override
+	public void setSpriteAtlas(SpriteAtlas spriteAtlas) {
+		this.spriteAtlas = spriteAtlas;
+	}
+
 }
