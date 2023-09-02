@@ -254,14 +254,14 @@ public abstract class ItemEntityRendererMixin extends EntityRenderer<EntityItem>
 		),
 		cancellable = true, remap = false
 	)
-	public void drawItemIntoGui(FontRenderer fontrenderer, RenderEngine renderengine, int itemId, int j, int spriteIndex, int x, int y, float brightness, float alpha, CallbackInfo ci) {
+	public void drawItemIntoGui(FontRenderer fontrenderer, RenderEngine renderEngine, int itemId, int j, int spriteIndex, int x, int y, float brightness, float alpha, CallbackInfo ci) {
 		if (itemId < Block.blocksList.length && BlockModelDispatcher.getInstance().getDispatch(Block.blocksList[itemId]).shouldItemRender3d()) {
 
 			GL11.glEnable(3042);
 			GL11.glBlendFunc(770, 771);
 
 			SpriteAtlasHelper.handleBlock(Block.blocksList[itemId]);
-			renderengine.bindTexture(renderengine.getTexture(SpriteAtlasHelper.currentAtlas.getName()));
+			renderEngine.bindTexture(renderEngine.getTexture(SpriteAtlasHelper.currentAtlas.getName()));
 
 			Block block = Block.blocksList[itemId];
 
@@ -297,7 +297,7 @@ public abstract class ItemEntityRendererMixin extends EntityRenderer<EntityItem>
 			GL11.glDisable(2896);
 
 			if (itemId < Block.blocksList.length) {
-				renderengine.bindTexture(renderengine.getTexture("/terrain.png"));
+				renderEngine.bindTexture(renderEngine.getTexture("/terrain.png"));
 				tileWidth = TextureFX.tileWidthTerrain;
 				defaultRenderer(itemId, j, spriteIndex, x, y, brightness, alpha, tileWidth);
 				//Global.LOGGER.info("call");
@@ -306,7 +306,8 @@ public abstract class ItemEntityRendererMixin extends EntityRenderer<EntityItem>
 
 				if (Item.itemsList[itemId] instanceof ISpriteAtlasItem) {
 					ISpriteAtlasItem spriteAtlasItem = (ISpriteAtlasItem) Item.itemsList[itemId];
-					renderengine.bindTexture(renderengine.getTexture(spriteAtlasItem.getSpriteAtlas().getName()));
+
+					renderEngine.bindTexture(SpriteAtlasHelper.getCustomTexture(renderEngine, spriteAtlasItem.getSpriteAtlas().getName()));
 
 					{
 						int color = ((Item)spriteAtlasItem).getColorFromDamage(j);
@@ -366,7 +367,7 @@ public abstract class ItemEntityRendererMixin extends EntityRenderer<EntityItem>
 					}
 
 				} else {
-					renderengine.bindTexture(renderengine.getTexture("/gui/items.png"));
+					renderEngine.bindTexture(renderEngine.getTexture("/gui/items.png"));
 					tileWidth = TextureFX.tileWidthItems;
 					defaultRenderer(itemId, j, spriteIndex, x, y, brightness, alpha, tileWidth);
 				}

@@ -41,44 +41,10 @@ public class SpriteAtlasHelper {
 	//	}
 	//}
 
-	public static int getCustomTexture(RenderEngine renderEngine, String texturePath) {
-
-		/// If it's already here just grab that.
-		Integer id = renderEngine.getTextureMap().get(texturePath);
-		if (id != null) {
-			return id;
-		}
-
-		/// With this we're at the TOP e.g. resources root.
-		//ClassLoader classLoader = RenderEngineHelper.class.getClassLoader();
+	public static int setCustomTexture(RenderEngine renderEngine, String texturePath) {
 		TexturePackBase texturePack = renderEngine.texturePacks.selectedTexturePack;
-		//Global.LOGGER.info("TexturePack: " + texturePack.texturePackFileName);
-		//Global.LOGGER.info("Resource: " + texturePack.getClass().getResource("/"));
 
-		//String[] afiles = texturePack.getFilesInDirectory("");
-		//for (String file : afiles) {
-		//	Global.LOGGER.info("a " + file);
-		//}
-		//String[] bfiles = texturePack.getFilesInDirectory("/assets/");
-		//for (String file : bfiles) {
-		//	Global.LOGGER.info("b " + file);
-		//}
-		//String[] cfiles = texturePack.getFilesInDirectory("/assets/gems_mod/item/");
-		//for (String file : cfiles) {
-		//	Global.LOGGER.info("c " + file);
-		//}
-
-		id = GLAllocation.generateTexture();
-
-		//Resource
-
-		//LOGGER.info(TexturePackBase.class.getModule().getName());
-		//System.out.println("PRINTING");
-		//for (File file : getResourceFolderFiles(texturePack, "assets")) {
-		//	System.out.println(file);
-		//}
-		//Global.LOGGER.info("1: " + "/assets/gems_mod/item/tilemap_gems.png");
-		//Global.LOGGER.info("2: " + texturePath);
+		int id = GLAllocation.generateTexture();
 
 		try (InputStream inputStream = texturePack.getResourceAsStream(texturePath)) {
 
@@ -101,12 +67,15 @@ public class SpriteAtlasHelper {
 		} catch (IOException exception) {
 			exception.printStackTrace();
 
-			/// When EXCEPTION setup "Missing Texture instead".
+
 			renderEngine.setupTexture(Textures.missingTexture, id, false);
 			renderEngine.getTextureMap().put(texturePath, id);
 			return id;
 		}
+	}
 
+	public static int getCustomTexture(RenderEngine renderEngine, String texturePath) {
+		return renderEngine.getTextureMap().get(texturePath);
 	}
 
 }

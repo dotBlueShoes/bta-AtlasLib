@@ -47,7 +47,7 @@ public abstract class ItemRendererMixin {
 		GL11.glPushMatrix();
 		BlockModelRenderBlocks.setRenderBlocks(this.renderBlocksInstance);
 
-		if (itemstack.itemID < Block.blocksList.length && ((BlockModel) BlockModelDispatcher.getInstance().getDispatch(Block.blocksList[itemstack.itemID])).shouldItemRender3d()) {
+		if (itemstack.itemID < Block.blocksList.length && BlockModelDispatcher.getInstance().getDispatch(Block.blocksList[itemstack.itemID]).shouldItemRender3d()) {
 
 			float brightness = entity.getBrightness(1.0f);
 			if (this.mc.fullbright) {
@@ -97,7 +97,8 @@ public abstract class ItemRendererMixin {
 			} else {
 				if (itemstack.getItem() instanceof ISpriteAtlasItem) {
 					ISpriteAtlasItem spriteAtlasItem = (ISpriteAtlasItem) itemstack.getItem();
-					GL11.glBindTexture(3553, this.mc.renderEngine.getTexture(spriteAtlasItem.getSpriteAtlas().getName()));
+
+					GL11.glBindTexture(3553, SpriteAtlasHelper.getCustomTexture(this.mc.renderEngine, spriteAtlasItem.getSpriteAtlas().getName()));
 					tileWidth = spriteAtlasItem.getSpriteAtlas().resolution;
 
 					xo  = ((float) (spriteAtlasItem.getSpriteIndex() % spriteAtlasItem.getSpriteAtlas().elements.x) / spriteAtlasItem.getSpriteAtlas().elements.x);
