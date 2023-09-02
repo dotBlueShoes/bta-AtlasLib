@@ -17,4 +17,8 @@ public class SpriteAtlas {
 	public String getName() {
 		return modid + "/" + pathname;
 	}
+
+	public int spriteCoordToIndex(int x, int y) {
+		return x + y * this.elements.x;
+	}
 }

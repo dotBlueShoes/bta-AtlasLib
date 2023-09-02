@@ -2,12 +2,14 @@
   "required": true,
   "minVersion": "0.8",
   "package": "dotBlueShoes.atlas_lib.mixin",
+  "plugin": "dotBlueShoes.atlas_lib.mixin.AtlasLibMixinPlugin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
 	"mixins.ChunkRendererMixin",
 	"mixins.ItemEntityRendererMixin",
 	"mixins.ItemRendererMixin",
-	"mixins.RenderBlocksMixin"
+	"mixins.RenderBlocksMixin",
+	"mixins.RenderEngineMixin"
   ],
   "client": [
   ],

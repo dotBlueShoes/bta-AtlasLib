@@ -14,12 +14,6 @@ public class SampleItem extends Item implements ISpriteAtlasItem {
 		this.setKey(key);
 	}
 
-	public int spriteCoordToIndex(int x, int y) {
-		return x + y * spriteAtlas.elements.x;
-	}
-
-
-
 	@Override
 	public Item setIconCoord(int x, int y) {
 		return this.setSpriteCoord(x, y);
@@ -27,7 +21,7 @@ public class SampleItem extends Item implements ISpriteAtlasItem {
 
 	@Override
 	public SampleItem setSpriteCoord(int x, int y) {
-		this.iconIndex = spriteCoordToIndex(x, y);
+		this.iconIndex = this.spriteAtlas.spriteCoordToIndex(x, y);
 		return this;
 	}
 

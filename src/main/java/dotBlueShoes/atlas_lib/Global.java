@@ -2,6 +2,7 @@ package dotBlueShoes.atlas_lib;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import useless.prismaticlibe.IColored;
 
 public class Global {
 

@@ -29,5 +29,6 @@
     "fabricloader": ">=0.13.3"
   },
   "suggests": {
+	"prismaticlibe": ">=2.1.3"
   }
 }

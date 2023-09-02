@@ -17,23 +17,19 @@ public class SampleBlock extends Block implements ISpriteAtlasBlock {
 		this.spriteAtlas = spriteAtlas;
 	}
 
-	public int spriteCoordToIndex(int x, int y) {
-		return x + y * spriteAtlas.elements.x;
-	}
-
 	public Block setFullBlockCoord(int x, int y) {
-		atlasIndices[Side.TOP.getId()] = this.spriteCoordToIndex(x, y);
-		atlasIndices[Side.BOTTOM.getId()] = this.spriteCoordToIndex(x, y);
-		atlasIndices[Side.NORTH.getId()] = this.spriteCoordToIndex(x, y);
-		atlasIndices[Side.EAST.getId()] = this.spriteCoordToIndex(x, y);
-		atlasIndices[Side.SOUTH.getId()] = this.spriteCoordToIndex(x, y);
-		atlasIndices[Side.WEST.getId()] = this.spriteCoordToIndex(x, y);
+		atlasIndices[Side.TOP.getId()] = this.spriteAtlas.spriteCoordToIndex(x, y);
+		atlasIndices[Side.BOTTOM.getId()] = this.spriteAtlas.spriteCoordToIndex(x, y);
+		atlasIndices[Side.NORTH.getId()] = this.spriteAtlas.spriteCoordToIndex(x, y);
+		atlasIndices[Side.EAST.getId()] = this.spriteAtlas.spriteCoordToIndex(x, y);
+		atlasIndices[Side.SOUTH.getId()] = this.spriteAtlas.spriteCoordToIndex(x, y);
+		atlasIndices[Side.WEST.getId()] = this.spriteAtlas.spriteCoordToIndex(x, y);
 		return this;
 	}
 
 	@Override
 	public ISpriteAtlas setSpriteCoord(int side, int x, int y) {
-		atlasIndices[side] = this.spriteCoordToIndex(x, y);
+		atlasIndices[side] = this.spriteAtlas.spriteCoordToIndex(x, y);
 		return this;
 	}
 
