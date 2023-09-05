@@ -23,40 +23,31 @@ import net.minecraft.core.item.ItemStack;
 import net.minecraft.core.item.tag.ItemTags;
 import net.minecraft.core.util.helper.MathHelper;
 import org.lwjgl.opengl.GL11;
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.*;
 
 import java.util.Random;
 
 import static net.minecraft.core.Global.TEXTURE_ATLAS_WIDTH_TILES;
 
-@Mixin(ItemEntityRenderer.class)
+@Mixin(value = ItemEntityRenderer.class, remap = false)
 public abstract class ItemEntityRendererMixin extends EntityRenderer<EntityItem> {
 
-	@Shadow(remap = false) @Final
+	@Shadow @Final
 	private Random random;
-	@Shadow(remap = false) @Final
+	@Shadow @Final
 	private RenderBlocks renderBlocks;
-	@Shadow(remap = false)
+	@Shadow
 	public boolean field_27004_a;
-	@Shadow(remap = false)
+	@Shadow
 	public abstract void renderTexturedQuad(int l, int i1, int i, int i2, int tileWidth, int tileWidth1);
 
 
-	@Inject(
-		//method = "doRenderItem(Lnet/minecraft/core/entity/Entity;DDDFF)V",
-		method = "doRenderItem",
-		at = @At(
-			value = "HEAD"
-		),
-		cancellable = true, remap = false
-	)
-	public void doRenderItem(EntityItem entity, double d, double d1, double d2, float f, float f1, CallbackInfo ci) {
+	/**
+	 * @author dotBlueShoes
+	 * @reason Maybe it was stupid.
+	 */
+	@Overwrite
+	public void doRenderItem(EntityItem entity, double d, double d1, double d2, float f, float f1) {
 
 		this.random.setSeed(187L);
 		ItemStack itemstack = entity.item;
@@ -72,6 +63,7 @@ public abstract class ItemEntityRendererMixin extends EntityRenderer<EntityItem>
 		float f3 = (((float)entity.age + f1) / 20.0f + entity.field_804_d) * 57.29578f;
 		int renderCount = 1;
 
+		// the following code makes same-type blocks render as piles of that block.
 		if (entity.item.stackSize > 1) {
 			renderCount = 2;
 		}
@@ -92,7 +84,8 @@ public abstract class ItemEntityRendererMixin extends EntityRenderer<EntityItem>
 			GL11.glRotatef(f3, 0.0f, 1.0f, 0.0f);
 
 			SpriteAtlasHelper.handleBlock(Block.blocksList[itemstack.itemID]);
-			this.loadTexture(SpriteAtlasHelper.currentAtlas.getName());
+			RenderEngine renderEngine = this.renderDispatcher.renderEngine;
+			renderEngine.bindTexture(SpriteAtlasHelper.getCustomTexture(renderEngine, SpriteAtlasHelper.currentAtlas.getName()));
 
 			BlockModelRenderBlocks.setRenderBlocks(this.renderBlocks);
 			BlockModel model = BlockModelDispatcher.getInstance().getDispatch(Block.blocksList[itemstack.itemID]);
@@ -122,68 +115,59 @@ public abstract class ItemEntityRendererMixin extends EntityRenderer<EntityItem>
 
 		} else {
 
-			int tileWidth;
-			GL11.glScalef(0.5f, 0.5f, 0.5f);
+			RenderEngine renderEngine = this.renderDispatcher.renderEngine;
+			float xo, xe, yo, ye;
 
-			float f6  = 0;
-			float f8  = 0;
-			float f10 = 0;
-			float f11 = 0;
+			if (itemstack.itemID < Block.blocksList.length) { // Grass, mushrooms are from terrain.png.
+				int spriteIndex = itemstack.getIconIndex();
 
-			if (itemstack.itemID < Block.blocksList.length) {
-				this.loadTexture("/terrain.png");
-				//Global.LOGGER.info("call");
-				tileWidth = TextureFX.tileWidthTerrain;
+				renderEngine.bindTexture(SpriteAtlasHelper.getCustomTexture(renderEngine, SpriteAtlasHelper.vanillaBlockAtlas.getName()));
+				xo  = ((float) (spriteIndex % SpriteAtlasHelper.vanillaItemAtlas.elements.x) / SpriteAtlasHelper.vanillaItemAtlas.elements.x);
+				xe  = xo + (1f / SpriteAtlasHelper.vanillaItemAtlas.elements.x);
+				yo = ((float) (spriteIndex / SpriteAtlasHelper.vanillaItemAtlas.elements.x) / SpriteAtlasHelper.vanillaItemAtlas.elements.y);
+				ye = yo + (1f / SpriteAtlasHelper.vanillaItemAtlas.elements.y);
+
 			} else {
 				if (itemstack.getItem() instanceof ISpriteAtlasItem) {
 					ISpriteAtlasItem spriteAtlasItem = (ISpriteAtlasItem) itemstack.getItem();
-
-					RenderEngine renderEngine = this.renderDispatcher.renderEngine;
-					int texture = SpriteAtlasHelper.getCustomTexture(renderEngine, spriteAtlasItem.getSpriteAtlas().getName());
-					renderEngine.bindTexture(texture);
-
 					int spriteIndex = spriteAtlasItem.getSpriteIndex();
-					//f6  = (float)(iconIndex / atlasSpriteItem.textureAtlas.elements.x * tileWidth) / (float)(atlasSpriteItem.textureAtlas.elements.x * tileWidth);
-					//f8  = (float)(iconIndex / atlasSpriteItem.textureAtlas.elements.x * tileWidth + tileWidth) / (float)(atlasSpriteItem.textureAtlas.elements.x * tileWidth);
-					//f10 = (float)(iconIndex % atlasSpriteItem.textureAtlas.elements.x * tileWidth) / (float)(atlasSpriteItem.textureAtlas.elements.y * tileWidth);
-					//f11 = (float)(iconIndex % atlasSpriteItem.textureAtlas.elements.x * tileWidth + tileWidth) / (float)(atlasSpriteItem.textureAtlas.elements.y * tileWidth);
-					f6  = ((float) (spriteIndex % spriteAtlasItem.getSpriteAtlas().elements.x) / spriteAtlasItem.getSpriteAtlas().elements.x);
-					f8  = f6 + (1f / spriteAtlasItem.getSpriteAtlas().elements.x);
-					f10 = ((float) (spriteIndex / spriteAtlasItem.getSpriteAtlas().elements.x) / spriteAtlasItem.getSpriteAtlas().elements.y);
-					f11 = f10 + (1f / spriteAtlasItem.getSpriteAtlas().elements.y);
+
+					renderEngine.bindTexture(SpriteAtlasHelper.getCustomTexture(renderEngine, spriteAtlasItem.getSpriteAtlas().getName()));
+					xo  = ((float) (spriteIndex % spriteAtlasItem.getSpriteAtlas().elements.x) / spriteAtlasItem.getSpriteAtlas().elements.x);
+					xe  = xo + (1f / spriteAtlasItem.getSpriteAtlas().elements.x);
+					yo = ((float) (spriteIndex / spriteAtlasItem.getSpriteAtlas().elements.x) / spriteAtlasItem.getSpriteAtlas().elements.y);
+					ye = yo + (1f / spriteAtlasItem.getSpriteAtlas().elements.y);
 
 				} else {
+					int spriteIndex = itemstack.getIconIndex();
 
-					int iconIndex = itemstack.getIconIndex();
-					this.loadTexture("/gui/items.png");
-					tileWidth = TextureFX.tileWidthItems;
-					f6  = (float)(iconIndex % TEXTURE_ATLAS_WIDTH_TILES * tileWidth) / (float)(TEXTURE_ATLAS_WIDTH_TILES * tileWidth);
-					f8  = (float)(iconIndex % TEXTURE_ATLAS_WIDTH_TILES * tileWidth + tileWidth) / (float)(TEXTURE_ATLAS_WIDTH_TILES * tileWidth);
-					f10 = (float)(iconIndex / TEXTURE_ATLAS_WIDTH_TILES * tileWidth) / (float)(TEXTURE_ATLAS_WIDTH_TILES * tileWidth);
-					f11 = (float)(iconIndex / TEXTURE_ATLAS_WIDTH_TILES * tileWidth + tileWidth) / (float)(TEXTURE_ATLAS_WIDTH_TILES * tileWidth);
-
+					renderEngine.bindTexture(SpriteAtlasHelper.getCustomTexture(renderEngine, SpriteAtlasHelper.vanillaItemAtlas.getName()));
+					xo  = ((float) (spriteIndex % SpriteAtlasHelper.vanillaItemAtlas.elements.x) / SpriteAtlasHelper.vanillaItemAtlas.elements.x);
+					xe  = xo + (1f / SpriteAtlasHelper.vanillaItemAtlas.elements.x);
+					yo = ((float) (spriteIndex / SpriteAtlasHelper.vanillaItemAtlas.elements.x) / SpriteAtlasHelper.vanillaItemAtlas.elements.y);
+					ye = yo + (1f / SpriteAtlasHelper.vanillaItemAtlas.elements.y);
 				}
 
 			}
 
 			Tessellator tessellator = Tessellator.instance;
-			float f12 = 1.0f;
-			float f13 = 0.5f;
-			float f14 = 0.25f;
+
+			GL11.glScalef(0.5f, 0.5f, 0.5f);
 
 			if (this.field_27004_a) {
-				int k = Item.itemsList[itemstack.itemID].getColorFromDamage(itemstack.getMetadata());
-				float f15 = (float)(k >> 16 & 0xFF) / 255.0f;
-				float f17 = (float)(k >> 8 & 0xFF) / 255.0f;
-				float f19 = (float)(k & 0xFF) / 255.0f;
-				float f21 = entity.getBrightness(f1);
-				if (Minecraft.getMinecraft((Object)this).fullbright || entity.item.getItem().hasTag(ItemTags.renderFullbright)) {
-					f21 = 1.0f;
-				}
-				GL11.glColor4f(f15 * f21, f17 * f21, f19 * f21, 1.0f);
+				int color = Item.itemsList[itemstack.itemID].getColorFromDamage(itemstack.getMetadata());
+				float red = (float)(color >> 16 & 0xFF) / 255.0f;
+				float green = (float)(color >> 8 & 0xFF) / 255.0f;
+				float blue = (float)(color & 0xFF) / 255.0f;
+				float brightness = entity.getBrightness(f1);
+
+				if (Minecraft.getMinecraft(this).fullbright || entity.item.getItem().hasTag(ItemTags.renderFullbright))
+					brightness = 1.0f;
+
+				GL11.glColor4f(red * brightness, green * brightness, blue * brightness, 1.0f);
 			}
 
-			if ((Boolean) Minecraft.getMinecraft((Object) this).gameSettings.items3D.value) {
+			if (Minecraft.getMinecraft(this).gameSettings.items3D.value) {
 
 				GL11.glPushMatrix();
 				GL11.glScaled(1.0, 1.0, 1.0);
@@ -214,10 +198,10 @@ public abstract class ItemEntityRendererMixin extends EntityRenderer<EntityItem>
 					GL11.glRotatef(180.0f - this.renderDispatcher.viewLerpYaw, 0.0f, 1.0f, 0.0f);
 					tessellator.startDrawingQuads();
 					tessellator.setNormal(0.0f, 1.0f, 0.0f);
-					tessellator.addVertexWithUV(-0.5, -0.25, 0.0, f6, f11);
-					tessellator.addVertexWithUV(0.5, -0.25, 0.0, f8, f11);
-					tessellator.addVertexWithUV(0.5, 0.75, 0.0, f8, f10);
-					tessellator.addVertexWithUV(-0.5, 0.75, 0.0, f6, f10);
+					tessellator.addVertexWithUV(-0.5, -0.25, 0.0, xo, ye);
+					tessellator.addVertexWithUV(0.5, -0.25, 0.0, xe, ye);
+					tessellator.addVertexWithUV(0.5, 0.75, 0.0, xe, yo);
+					tessellator.addVertexWithUV(-0.5, 0.75, 0.0, xo, yo);
 					tessellator.draw();
 					GL11.glPopMatrix();
 				}
@@ -226,35 +210,29 @@ public abstract class ItemEntityRendererMixin extends EntityRenderer<EntityItem>
 
 		GL11.glDisable(32826);
 		GL11.glPopMatrix();
-
-		ci.cancel();
 	}
 
 	@Unique
-	private void defaultRenderer(int i, int j, int k, int l, int i1, float brightness, float alpha, int tileWidth) {
-		int k1 = Item.itemsList[i].getColorFromDamage(j);
-		float f = (float)(k1 >> 16 & 0xFF) / 255.0f;
-		float f1 = (float)(k1 >> 8 & 0xFF) / 255.0f;
-		float f3 = (float)(k1 & 0xFF) / 255.0f;
+	private void defaultRenderer(int color, int spriteIndex, int l, int i1, float brightness, float alpha, int tileWidth, int tileHeight) {
+		float red = (float)(color >> 16 & 0xFF) / 255.0f;
+		float green = (float)(color >> 8 & 0xFF) / 255.0f;
+		float blue = (float)(color & 0xFF) / 255.0f;
 
-		if (this.field_27004_a) {
-			GL11.glColor4f(f * brightness, f1 * brightness, f3 * brightness, alpha);
-		} else {
+		if (this.field_27004_a)
+			GL11.glColor4f(red * brightness, green * brightness, blue * brightness, alpha);
+		else
 			GL11.glColor4f(brightness, brightness, brightness, alpha);
-		}
 
-		this.renderTexturedQuad(l, i1, k % TEXTURE_ATLAS_WIDTH_TILES * tileWidth, k / TEXTURE_ATLAS_WIDTH_TILES * tileWidth, tileWidth, tileWidth);
+		this.renderTexturedQuad(l, i1, spriteIndex % TEXTURE_ATLAS_WIDTH_TILES * tileWidth, spriteIndex / TEXTURE_ATLAS_WIDTH_TILES * tileHeight, tileWidth, tileHeight);
 		GL11.glEnable(2896);
 	}
 
-	@Inject(
-		method = "drawItemIntoGui(Lnet/minecraft/client/render/FontRenderer;Lnet/minecraft/client/render/RenderEngine;IIIIIFF)V",
-		at = @At(
-			value = "HEAD"
-		),
-		cancellable = true, remap = false
-	)
-	public void drawItemIntoGui(FontRenderer fontrenderer, RenderEngine renderEngine, int itemId, int j, int spriteIndex, int x, int y, float brightness, float alpha, CallbackInfo ci) {
+	/**
+	 * @author dotBlueShoes
+	 * @reason Maybe it was stupid.
+	 */
+	@Overwrite
+	public void drawItemIntoGui(FontRenderer fontrenderer, RenderEngine renderEngine, int itemId, int j, int spriteIndex, int x, int y, float brightness, float alpha) {
 		if (itemId < Block.blocksList.length && BlockModelDispatcher.getInstance().getDispatch(Block.blocksList[itemId]).shouldItemRender3d()) {
 
 			GL11.glEnable(3042);
@@ -273,13 +251,13 @@ public abstract class ItemEntityRendererMixin extends EntityRenderer<EntityItem>
 			GL11.glRotatef(210.0f, 1.0f, 0.0f, 0.0f);
 			GL11.glRotatef(45.0f, 0.0f, 1.0f, 0.0f);
 
-			int l1 = Item.itemsList[itemId].getColorFromDamage(j);
-			float f2 = (float)(l1 >> 16 & 0xFF) / 255.0f;
-			float f4 = (float)(l1 >> 8 & 0xFF) / 255.0f;
-			float f5 = (float)(l1 & 0xFF) / 255.0f;
+			int color = Item.itemsList[itemId].getColorFromDamage(j);
+			float red = (float)(color >> 16 & 0xFF) / 255.0f;
+			float green = (float)(color >> 8 & 0xFF) / 255.0f;
+			float blue = (float)(color & 0xFF) / 255.0f;
 
 			if (this.field_27004_a) {
-				GL11.glColor4f(f2 * brightness, f4 * brightness, f5 * brightness, alpha);
+				GL11.glColor4f(red * brightness, green * brightness, blue * brightness, alpha);
 			} else {
 				GL11.glColor4f(brightness, brightness, brightness, alpha);
 			}
@@ -293,14 +271,15 @@ public abstract class ItemEntityRendererMixin extends EntityRenderer<EntityItem>
 
 		} else if (spriteIndex >= 0) {
 
-			int tileWidth;
 			GL11.glDisable(2896);
 
 			if (itemId < Block.blocksList.length) {
-				renderEngine.bindTexture(renderEngine.getTexture("/terrain.png"));
-				tileWidth = TextureFX.tileWidthTerrain;
-				defaultRenderer(itemId, j, spriteIndex, x, y, brightness, alpha, tileWidth);
-				//Global.LOGGER.info("call");
+
+				int tileWidth = TextureFX.tileWidthTerrain;
+				int color = Item.itemsList[itemId].getColorFromDamage(j);
+
+				renderEngine.bindTexture(SpriteAtlasHelper.getCustomTexture(renderEngine, SpriteAtlasHelper.vanillaBlockAtlas.getName()));
+				defaultRenderer(color, spriteIndex, x, y, brightness, alpha, tileWidth, tileWidth);
 
 			} else {
 
@@ -367,17 +346,16 @@ public abstract class ItemEntityRendererMixin extends EntityRenderer<EntityItem>
 					}
 
 				} else {
-					renderEngine.bindTexture(renderEngine.getTexture("/gui/items.png"));
-					tileWidth = TextureFX.tileWidthItems;
-					defaultRenderer(itemId, j, spriteIndex, x, y, brightness, alpha, tileWidth);
+					renderEngine.bindTexture(SpriteAtlasHelper.getCustomTexture(renderEngine, SpriteAtlasHelper.vanillaItemAtlas.getName()));
+					int tileWidth = TextureFX.tileWidthItems;
+					int color = Item.itemsList[itemId].getColorFromDamage(j);
+					defaultRenderer(color, spriteIndex, x, y, brightness, alpha, tileWidth, tileWidth);
 				}
 
 			}
 		}
 
 		GL11.glEnable(2884);
-
-		ci.cancel();
 	}
 
 }

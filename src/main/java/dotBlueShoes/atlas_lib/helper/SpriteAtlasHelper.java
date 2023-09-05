@@ -23,6 +23,13 @@ public class SpriteAtlasHelper {
 		16
 	);
 
+	public static final SpriteAtlas vanillaItemAtlas = new SpriteAtlas(
+		"",
+		"gui/items.png",
+		new Pair<Integer>(32, 32),
+		16
+	);
+
 	public static SpriteAtlas currentAtlas = vanillaBlockAtlas;
 
 	public static void handleBlock(Block block) {

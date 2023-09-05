@@ -21,4 +21,8 @@ public class SpriteAtlas {
 	public int spriteCoordToIndex(int x, int y) {
 		return x + y * this.elements.x;
 	}
+
+	public Pair<Integer> spriteIndexToCoord(int index) {
+		return new Pair<>(index % this.elements.x, index / this.elements.x);
+	}
 }

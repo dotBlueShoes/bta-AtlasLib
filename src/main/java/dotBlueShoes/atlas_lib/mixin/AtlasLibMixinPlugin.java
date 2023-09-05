@@ -19,7 +19,10 @@ public class AtlasLibMixinPlugin implements IMixinConfigPlugin {
 	private static final Supplier<Boolean> TRUE = () -> true; // default value for ones not specified.
 
 	private static final Map<String, Supplier<Boolean>> CONDITIONS = ImmutableMap.of(
-		"dotBlueShoes.atlas_lib.mixin.mixins.RenderEngineMixin", () -> !FabricLoader.getInstance().isModLoaded("prismaticlibe")
+		"dotBlueShoes.atlas_lib.mixin.mixins.ItemEntityRendererMixin", () -> !FabricLoader.getInstance().isModLoaded("prismaticlibe"),
+		"dotBlueShoes.atlas_lib.mixin.mixins.prismatic.ItemEntityRendererMixin", () -> FabricLoader.getInstance().isModLoaded("prismaticlibe"),
+		"dotBlueShoes.atlas_lib.mixin.mixins.ItemRendererMixin", () -> !FabricLoader.getInstance().isModLoaded("prismaticlibe"),
+		"dotBlueShoes.atlas_lib.mixin.mixins.prismatic.ItemRendererMixin", () -> FabricLoader.getInstance().isModLoaded("prismaticlibe")
 	);
 
 	@Override
@@ -37,6 +40,7 @@ public class AtlasLibMixinPlugin implements IMixinConfigPlugin {
 		//boolean ret = CONDITIONS.getOrDefault(mixinClassName, TRUE).get();
 		//System.out.print("SHOULD_MIXIN: " + ret + ", " + FabricLoader.getInstance().isModLoaded("prismaticlibe") + "\n");
 		return CONDITIONS.getOrDefault(mixinClassName, TRUE).get();
+		//return ret;
 	}
 
 	@Override

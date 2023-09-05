@@ -1,24 +1,14 @@
-package dotBlueShoes.atlas_lib.mixin.mixins;
-
-///
-/// Purpose
-/// - Renders item in player hand.
-///
+package dotBlueShoes.atlas_lib.mixin.mixins.prismatic;
 
 import dotBlueShoes.atlas_lib.helper.SpriteAtlasHelper;
 import dotBlueShoes.atlas_lib.utility.ISpriteAtlasItem;
-
-import dotBlueShoes.atlas_lib.utility.Pair;
 import dotBlueShoes.atlas_lib.utility.SpriteAtlas;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.render.ItemRenderer;
 import net.minecraft.client.render.RenderBlocks;
 import net.minecraft.client.render.Tessellator;
-import net.minecraft.client.render.TextureFX;
-import net.minecraft.client.render.block.model.BlockModel;
 import net.minecraft.client.render.block.model.BlockModelDispatcher;
 import net.minecraft.client.render.block.model.BlockModelRenderBlocks;
-import net.minecraft.core.Global;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.entity.Entity;
 import net.minecraft.core.entity.EntityLiving;
@@ -28,17 +18,14 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin( value = ItemRenderer.class, remap = false )
+@Mixin( value = {ItemRenderer.class}, remap = false)
 public abstract class ItemRendererMixin {
 
-	@Shadow(remap = false)
-	private RenderBlocks renderBlocksInstance;
-	@Shadow(remap = false)
+	@Shadow
 	private Minecraft mc;
+	@Shadow
+	private RenderBlocks renderBlocksInstance = new RenderBlocks();
 
 	@Unique
 	public void drawItem(int atlasResolution, float[] params, boolean handheldTransform) {
@@ -215,6 +202,7 @@ public abstract class ItemRendererMixin {
 				}
 			}
 
+			//ItemRendererCommon common = (ItemRendererCommon)this;
 			this.drawItem(atlasResolution, params, handheldTransform);
 
 		}

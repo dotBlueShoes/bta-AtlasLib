@@ -4,14 +4,18 @@
   "package": "dotBlueShoes.atlas_lib.mixin",
   "plugin": "dotBlueShoes.atlas_lib.mixin.AtlasLibMixinPlugin",
   "compatibilityLevel": "JAVA_8",
+  "mixinPriority": 10,
   "mixins": [
+	"common.ItemRendererCommon",
+	"mixins.prismatic.ItemRendererMixin"
+  ],
+  "client": [
 	"mixins.ChunkRendererMixin",
 	"mixins.ItemEntityRendererMixin",
 	"mixins.ItemRendererMixin",
 	"mixins.RenderBlocksMixin",
-	"mixins.RenderEngineMixin"
-  ],
-  "client": [
+	"mixins.RenderEngineMixin",
+	"mixins.prismatic.ItemEntityRendererMixin"
   ],
   "injectors": {
 	"defaultRequire": 1
