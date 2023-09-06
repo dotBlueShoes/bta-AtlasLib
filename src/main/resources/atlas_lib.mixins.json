@@ -6,8 +6,6 @@
   "compatibilityLevel": "JAVA_8",
   "mixinPriority": 10,
   "mixins": [
-	"common.ItemRendererCommon",
-	"mixins.prismatic.ItemRendererMixin"
   ],
   "client": [
 	"mixins.ChunkRendererMixin",
@@ -15,7 +13,8 @@
 	"mixins.ItemRendererMixin",
 	"mixins.RenderBlocksMixin",
 	"mixins.RenderEngineMixin",
-	"mixins.prismatic.ItemEntityRendererMixin"
+	"mixins.prismatic.ItemEntityRendererMixin",
+	"mixins.prismatic.ItemRendererMixin"
   ],
   "injectors": {
 	"defaultRequire": 1

@@ -7,9 +7,9 @@ package dotBlueShoes.atlas_lib.mixin.mixins;
 
 import dotBlueShoes.atlas_lib.helper.SpriteAtlasHelper;
 import dotBlueShoes.atlas_lib.utility.ISpriteAtlasItem;
-
 import dotBlueShoes.atlas_lib.utility.Pair;
 import dotBlueShoes.atlas_lib.utility.SpriteAtlas;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.render.ItemRenderer;
 import net.minecraft.client.render.RenderBlocks;
@@ -23,7 +23,9 @@ import net.minecraft.core.block.Block;
 import net.minecraft.core.entity.Entity;
 import net.minecraft.core.entity.EntityLiving;
 import net.minecraft.core.item.ItemStack;
+
 import org.lwjgl.opengl.GL11;
+
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
@@ -35,9 +37,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin( value = ItemRenderer.class, remap = false )
 public abstract class ItemRendererMixin {
 
-	@Shadow(remap = false)
+	@Shadow
 	private RenderBlocks renderBlocksInstance;
-	@Shadow(remap = false)
+	@Shadow
 	private Minecraft mc;
 
 	@Unique

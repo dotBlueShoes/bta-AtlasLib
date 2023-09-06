@@ -33,7 +33,7 @@ public abstract class RenderEngineMixin {
 
 	@Inject(method = "initDynamicTextures", at = @At("TAIL"), remap = false)
 	public void initDynamicTextures(CallbackInfo ci) {
-		Global.LOGGER.info("HeLLO");
+		//Global.LOGGER.info("HeLLO");
 		for (SpriteAtlas atlas : SpriteAtlases.atlases) {
 			SpriteAtlasHelper.setCustomTexture((RenderEngine)(Object)this, atlas.getName());
 		}

@@ -1,5 +1,6 @@
 package dotBlueShoes.atlas_lib.mixin.mixins.prismatic;
 
+import dotBlueShoes.atlas_lib.Global;
 import dotBlueShoes.atlas_lib.helper.SpriteAtlasHelper;
 import dotBlueShoes.atlas_lib.utility.ISpriteAtlasItem;
 import dotBlueShoes.atlas_lib.utility.SpriteAtlas;
@@ -10,7 +11,6 @@ import net.minecraft.client.render.block.model.BlockModelDispatcher;
 import net.minecraft.client.render.block.model.BlockModelRenderBlocks;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.client.render.entity.ItemEntityRenderer;
-import net.minecraft.core.Global;
 import net.minecraft.core.block.Block;
 import net.minecraft.core.entity.EntityItem;
 import net.minecraft.core.item.Item;
@@ -414,14 +414,23 @@ public abstract class ItemEntityRendererMixin extends EntityRenderer<EntityItem>
 	 * @reason Maybe it was stupid.
 	 */
 	@Overwrite
-	public void renderItemIntoGUI(FontRenderer fontrenderer, RenderEngine renderengine, ItemStack itemstack, int x, int y, float brightness, float alpha) {
-		if (itemstack != null) {
-			if (itemstack.getItem() instanceof IColored) {
-				this.drawColoredItemIntoGui(renderengine, itemstack.getItem(), itemstack.getMetadata(), x, y, brightness, alpha);
+	public void renderItemIntoGUI(FontRenderer fontRenderer, RenderEngine renderEngine, ItemStack itemStack, int x, int y, float brightness, float alpha) {
+		if (itemStack != null) {
+			if (itemStack.getItem() instanceof IColored) {
+				this.drawColoredItemIntoGui(renderEngine, itemStack.getItem(), itemStack.getMetadata(), x, y, brightness, alpha);
 			} else {
-				this.drawItemIntoGui(fontrenderer, renderengine, itemstack.itemID, itemstack.getMetadata(), itemstack.getIconIndex(), x, y, brightness, alpha);
+				this.drawItemIntoGui(fontRenderer, renderEngine, itemStack.itemID, itemStack.getMetadata(), itemStack.getIconIndex(), x, y, brightness, alpha);
 			}
 		}
+	}
+
+	/**
+	 * @author dotBlueShoes
+	 * @reason Maybe it was stupid.
+	 */
+	@Overwrite
+	public void renderItemIntoGUI(FontRenderer fontRenderer, RenderEngine renderEngine, ItemStack itemStack, int x, int y, float alpha) {
+		renderItemIntoGUI(fontRenderer, renderEngine, itemStack, x, y, 1f, alpha);
 	}
 
 	/**
