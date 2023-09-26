@@ -23,7 +23,7 @@ import useless.prismaticlibe.IColored;
 
 import java.util.Random;
 
-@Mixin(value = ItemEntityRenderer.class, remap = false, priority = 1010)
+@Mixin(value = ItemEntityRenderer.class, remap = false, priority = 1110)
 public abstract class ItemEntityRendererMixin extends EntityRenderer<EntityItem> {
 
 	@Shadow
