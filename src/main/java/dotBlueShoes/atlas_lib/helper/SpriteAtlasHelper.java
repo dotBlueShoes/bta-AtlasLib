@@ -1,5 +1,6 @@
 package dotBlueShoes.atlas_lib.helper;
 
+import dotBlueShoes.atlas_lib.AtlasLib;
 import dotBlueShoes.atlas_lib.Global;
 import dotBlueShoes.atlas_lib.utility.ISpriteAtlasBlock;
 import dotBlueShoes.atlas_lib.utility.Pair;
@@ -17,14 +18,14 @@ import java.io.InputStream;
 public class SpriteAtlasHelper {
 
 	public static final SpriteAtlas vanillaBlockAtlas = new SpriteAtlas(
-		"",
+		null,
 		"terrain.png",
 		new Pair<Integer>(32, 32),
 		16
 	);
 
 	public static final SpriteAtlas vanillaItemAtlas = new SpriteAtlas(
-		"",
+		null,
 		"gui/items.png",
 		new Pair<Integer>(32, 32),
 		16
@@ -51,7 +52,13 @@ public class SpriteAtlasHelper {
 	public static int setCustomTexture(RenderEngine renderEngine, String texturePath) {
 		TexturePackBase texturePack = renderEngine.texturePacks.selectedTexturePack;
 
+
+
 		int id = GLAllocation.generateTexture();
+
+		//Global.LOGGER.info("1: " + "/assets/gems_mod/item/tilemap_gems.png");
+		//Global.LOGGER.info("2: " + "/gems_mod/item/tilemap_gems.png");
+		//Global.LOGGER.info("3: " + texturePath);
 
 		try (InputStream inputStream = texturePack.getResourceAsStream(texturePath)) {
 
@@ -82,6 +89,7 @@ public class SpriteAtlasHelper {
 	}
 
 	public static int getCustomTexture(RenderEngine renderEngine, String texturePath) {
+		//Global.LOGGER.info(texturePath);
 		return renderEngine.getTextureMap().get(texturePath);
 	}
 
