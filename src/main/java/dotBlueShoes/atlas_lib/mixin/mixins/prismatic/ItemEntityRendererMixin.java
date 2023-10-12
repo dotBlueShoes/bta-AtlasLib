@@ -1,6 +1,5 @@
 package dotBlueShoes.atlas_lib.mixin.mixins.prismatic;
 
-import dotBlueShoes.atlas_lib.Global;
 import dotBlueShoes.atlas_lib.helper.SpriteAtlasHelper;
 import dotBlueShoes.atlas_lib.utility.ISpriteAtlasItem;
 import dotBlueShoes.atlas_lib.utility.SpriteAtlas;
@@ -23,7 +22,7 @@ import useless.prismaticlibe.IColored;
 
 import java.util.Random;
 
-@Mixin(value = ItemEntityRenderer.class, remap = false, priority = 1110)
+@Mixin(value = ItemEntityRenderer.class, remap = false, priority = 1020)
 public abstract class ItemEntityRendererMixin extends EntityRenderer<EntityItem> {
 
 	@Shadow
@@ -108,10 +107,6 @@ public abstract class ItemEntityRendererMixin extends EntityRenderer<EntityItem>
 				this.renderColorQuadSpace(tessellator, atlasElements[0], atlasElements[1], overlayColor, brightness, overlayTextureIndex);
 				GL11.glPopMatrix();
 			}
-
-			GL11.glDisable(32826);
-			GL11.glPopMatrix();
-
 		}
 	}
 
@@ -180,9 +175,6 @@ public abstract class ItemEntityRendererMixin extends EntityRenderer<EntityItem>
 				GL11.glPopMatrix();
 			}
 		}
-
-		GL11.glDisable(32826);
-		GL11.glPopMatrix();
 	}
 
 	@Unique
@@ -356,23 +348,23 @@ public abstract class ItemEntityRendererMixin extends EntityRenderer<EntityItem>
 			float itemSize = model.getItemRenderScale();
 			GL11.glScalef(itemSize, itemSize, itemSize);
 
-			for (int j = 0; j < renderCount; ++j) {
+			for (int i = 0; i < renderCount; ++i) {
 				GL11.glPushMatrix();
 
-				if (j > 0) {
-					float f5 = (this.random.nextFloat() * 2.0f - 1.0f) * 0.2f / itemSize;
-					float f7 = (this.random.nextFloat() * 2.0f - 1.0f) * 0.2f / itemSize;
-					float f9 = (this.random.nextFloat() * 2.0f - 1.0f) * 0.2f / itemSize;
-					GL11.glTranslatef(f5, f7, f9);
+				if (i > 0) {
+					float ix = (this.random.nextFloat() * 2.0f - 1.0f) * 0.2f / itemSize;
+					float iy = (this.random.nextFloat() * 2.0f - 1.0f) * 0.2f / itemSize;
+					float iz = (this.random.nextFloat() * 2.0f - 1.0f) * 0.2f / itemSize;
+					GL11.glTranslatef(ix, iy, iz);
 				}
 
-				float f4 = entity.getBrightness(f1);
+				float brightness = entity.getBrightness(f1);
 
 				if (Minecraft.getMinecraft(this).fullbright) {
-					f4 = 1.0f;
+					brightness = 1.0f;
 				}
 
-				this.renderBlocks.renderBlockOnInventory(Block.blocksList[itemStack.itemID], itemStack.getMetadata(), f4);
+				this.renderBlocks.renderBlockOnInventory(Block.blocksList[itemStack.itemID], itemStack.getMetadata(), brightness);
 				GL11.glPopMatrix();
 			}
 
@@ -394,6 +386,9 @@ public abstract class ItemEntityRendererMixin extends EntityRenderer<EntityItem>
 				this.drawVanillaGroundItem(entity, itemStack, points, angle, f1, renderCount);
 			}
 		}
+
+		GL11.glDisable(32826);
+		GL11.glPopMatrix();
 	}
 
 

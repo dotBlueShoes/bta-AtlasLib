@@ -21,7 +21,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import useless.prismaticlibe.IColored;
 
-@Mixin( value = {ItemRenderer.class}, remap = false, priority = 1110)
+@Mixin( value = {ItemRenderer.class}, remap = false, priority = 1020)
 public abstract class ItemRendererMixin {
 
 	@Shadow
