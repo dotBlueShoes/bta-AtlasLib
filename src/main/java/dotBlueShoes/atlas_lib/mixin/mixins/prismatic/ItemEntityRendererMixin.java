@@ -25,8 +25,7 @@ import java.util.Random;
 @Mixin(value = ItemEntityRenderer.class, remap = false, priority = 1020)
 public abstract class ItemEntityRendererMixin extends EntityRenderer<EntityItem> {
 
-	@Shadow
-	@Final
+	@Shadow @Final
 	private Random random;
 	@Shadow @Final
 	private RenderBlocks renderBlocks;
@@ -293,7 +292,6 @@ public abstract class ItemEntityRendererMixin extends EntityRenderer<EntityItem>
 	@Unique
 	public boolean isBlock(final int id) {
 		return id < Block.blocksList.length &&
-			//Block.blocksList[id] != null &&
 			BlockModelDispatcher.getInstance().getDispatch(Block.blocksList[id]).shouldItemRender3d();
 	}
 
@@ -453,9 +451,9 @@ public abstract class ItemEntityRendererMixin extends EntityRenderer<EntityItem>
 			GL11.glRotatef(45.0f, 0.0f, 1.0f, 0.0f);
 
 			int color = Item.itemsList[itemId].getColorFromDamage(metadata);
-			float red = (float)(color >> 16 & 0xFF) / 255.0f;
+			float red   = (float)(color >> 16 & 0xFF) / 255.0f;
 			float green = (float)(color >> 8 & 0xFF) / 255.0f;
-			float blue = (float)(color & 0xFF) / 255.0f;
+			float blue  = (float)(color & 0xFF) / 255.0f;
 
 			if (this.field_27004_a) {
 				GL11.glColor4f(red * brightness, green * brightness, blue * brightness, alpha);
@@ -575,6 +573,9 @@ public abstract class ItemEntityRendererMixin extends EntityRenderer<EntityItem>
 
 				} else {
 					renderEngine.bindTexture(SpriteAtlasHelper.getCustomTexture(renderEngine, SpriteAtlasHelper.vanillaItemAtlas.getName()));
+
+					spriteIndexes[0] = SpriteAtlasHelper.vanillaItemAtlas.spriteCoordToIndex(colored.baseTexture()[0], colored.baseTexture()[1]);
+					spriteIndexes[1] = SpriteAtlasHelper.vanillaItemAtlas.spriteCoordToIndex(colored.overlayTexture()[0], colored.overlayTexture()[1]);
 
 					this.renderColoredQuadPlane(x, y, spriteIndexes[0], SpriteAtlasHelper.vanillaItemAtlas, colored.baseColor());
 					this.renderColoredQuadPlane(x, y, spriteIndexes[1], SpriteAtlasHelper.vanillaItemAtlas, colored.overlayColor());

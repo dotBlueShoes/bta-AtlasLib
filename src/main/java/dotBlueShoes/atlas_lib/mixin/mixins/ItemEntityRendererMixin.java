@@ -24,6 +24,7 @@ import net.minecraft.core.item.tag.ItemTags;
 import net.minecraft.core.util.helper.MathHelper;
 import org.lwjgl.opengl.GL11;
 import org.spongepowered.asm.mixin.*;
+import useless.prismaticlibe.IColored;
 
 import java.util.Random;
 
